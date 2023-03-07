@@ -9,9 +9,34 @@ Class {
 	#category : #ESP32Driver
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'analog io' }
+ESP32Driver >> analogValue: aValue intoPin: pinNr [
+	 ^self sendCommand: 'AO' params: { pinNr . aValue}
+]
+
+{ #category : #'analog io' }
+ESP32Driver >> analogValuefromPin: pinNr [
+	 ^self sendCommandWait: 'AI' params: { pinNr }
+]
+
+{ #category : #'analog io' }
 ESP32Driver >> beAnalogInputOnPin: pinNr [
-	self sendCommand: 'Mode' params: { 'AI' . pinNr }
+	self sendCommand: 'Mode' params: { pinNr .'AI' }
+]
+
+{ #category : #'analog io' }
+ESP32Driver >> beAnalogOutputOnPin: pinNr [
+	self sendCommand: 'Mode' params: { pinNr . 'AO' }
+]
+
+{ #category : #'digital io' }
+ESP32Driver >> beDigitalInputOnPin: pinNr [
+	self sendCommand: 'Mode' params: { pinNr . 'DI' }
+]
+
+{ #category : #'digital io' }
+ESP32Driver >> beDigitalOutputOnPin: pinNr [
+	self sendCommand: 'Mode' params: { pinNr .'DO' }
 ]
 
 { #category : #accessing }
@@ -36,6 +61,16 @@ ESP32Driver >> deviceName [
 ESP32Driver >> deviceName: anObject [
 
 	deviceName := anObject
+]
+
+{ #category : #'digital io' }
+ESP32Driver >> digitalValue: oneOrZero intoPin: pinNr [
+	self sendCommand: 'DO' params: { pinNr . oneOrZero }
+]
+
+{ #category : #'digital io' }
+ESP32Driver >> digitalValuefromPin: pinNr [
+	^self sendCommandWait: 'DI' params: { pinNr }
 ]
 
 { #category : #accessing }
@@ -75,5 +110,7 @@ ESP32Driver >> sendCommandWait: code params: paramList [
 { #category : #initialization }
 ESP32Driver >> setup [
 	"create the MQTT client"
-	mqttClient := MQTTClient url: brokerIP
+	mqttClient := MQTTClient url: brokerIP.
+	mqttClient open.
+	mqttClient subscribeToTopic: 'pots/', deviceName, '/+/Result'
 ]
