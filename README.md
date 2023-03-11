@@ -1,16 +1,23 @@
 # toit-pharo
 This repo contains a driver for communication between Pharo and a Toit daemon program running on an ESP32 microprocessor.
 
-Communication is through MQTT, used in a synchronous way; the driver sends commands and waits for a response message.
+Communication is through MQTT, used in a synchronous way; the driver sends commands and waits for a response message. The driver supports digital i/o analog i/o and I2C.
 
-First the program daemon.toit
+First the program daemon.toit needs to be running on the ESP32. Then you can do
+```Smalltalk
+esp := ESP32Driver new brokerIP: 'mqtt://192.168.1.233''; deviceName: 'test1'; setup.
+esp beDigitalOutputOnPin: 2.  "the on board LED"
+esp digitalValue: 1 intoPin: 2. "turn the LED on"
+```
 
 
+
+In PharoOfThingsSimplified (github.com/robvanlopik/Pots) there is also a driver that uses this one, so you can use the ESP32 as a PotsController.
 
 
 Some limitations/todo's:
 - you will have to modify daemon.toit if your ESP32 is not on a 30  pins baord, to adapt the address of the MQTT broker, to change the name of the ESP-device. I intend to use toit's asset mechanism for this.
-- ...
+- you need the Toit environment to load daemon.toit. There should be a file that can be directly installed on the ESP32. Doable, but not a priority.
 
 ## Installing daemon.toit
 You will need to flash the ESP32 with the toit tools, at least Jaguar. You don't need Visual Studio Code.
