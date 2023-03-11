@@ -1,4 +1,4 @@
-# toit-pharo
+# toit-pharo (WIP)
 This repo contains a driver for communication between Pharo and a Toit daemon program running on an ESP32 microprocessor.
 
 Communication is through MQTT, used in a synchronous way; the driver sends commands and waits for a response message. The driver supports digital i/o analog i/o and I2C.
