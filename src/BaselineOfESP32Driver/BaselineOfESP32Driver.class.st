@@ -18,5 +18,5 @@ BaselineOfESP32Driver >> declareMQTTon: spec [
 
 	spec
 		baseline: 'MQTT'
-		with: [  spec repository: 'github://svenc/mqtt/repository' ]
+		with: [  spec repository: 'github://svenvc/mqtt/repository' ]
 ]
