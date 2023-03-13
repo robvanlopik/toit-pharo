@@ -38,7 +38,8 @@ ESP32Driver >> analogValue: aValue intoPin: pinNr [
 
 { #category : #'analog io' }
 ESP32Driver >> analogValuefromPin: pinNr [
-	 ^self sendCommandWait: 'AI' params: { pinNr }
+	"we may want to checl whether the first element of the answer is indeed the pin number"
+	 ^(self sendCommandWait: 'AI' params: { pinNr }) at: 2
 ]
 
 { #category : #'analog io' }
@@ -101,8 +102,8 @@ ESP32Driver >> digitalValue: oneOrZero intoPin: pinNr [
 ]
 
 { #category : #'digital io' }
-ESP32Driver >> digitalValuefromPin: pinNr [
-	^self sendCommandWait: 'DI' params: { pinNr }
+ESP32Driver >> digitalValueFromPin: pinNr [
+	^(self sendCommandWait: 'DI' params: { pinNr }) at: 2
 ]
 
 { #category : #utilties }
@@ -171,6 +172,7 @@ ESP32Driver >> sendCommandWait: code params: paramList [
 	"wait for an answer"
 	answer := mqttClient readMessage.
 	"to do check topic"
+	"note that the answer may include e.g. the pin numbers as first element"
 	^STONJSON fromString: ( answer message asString)
 ]
 
