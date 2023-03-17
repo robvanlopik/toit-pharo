@@ -61,6 +61,19 @@ ESP32I2CConnection >> i2cWrite: aByteArray [
 	driver sendCommand: 'I2CWrite' params: { i2cAddress . aByteArray base64Encoded  }
 ]
 
+{ #category : #accessing }
+ESP32I2CConnection >> read8BitsArray: blockSize startingAt: reg [
+
+	"only used for compatibility with wiringPi"
+
+	^ self readDataBlock: blockSize at: reg
+]
+
+{ #category : #accessing }
+ESP32I2CConnection >> read8BitsAt: aRegister [
+	^self readByteAt: aRegister 
+]
+
 { #category : #reading }
 ESP32I2CConnection >> readByte [
 	"return a single byte"
@@ -74,7 +87,7 @@ ESP32I2CConnection >> readByteAt: aRegister [
 ]
 
 { #category : #reading }
-ESP32I2CConnection >> readDatablock: count at: aRegister [
+ESP32I2CConnection >> readDataBlock: count at: aRegister [
 	"return a byte array"
 	^(self i2cReadAt: aRegister count: count) 
 ]
@@ -89,6 +102,11 @@ ESP32I2CConnection >> readWordAt: aRegister [
 ESP32I2CConnection >> readWordBigEndianAt: aRegister [
 	"return a weord in bigendian interpretation"
 	^(self i2cReadAt: aRegister count: 2) unsignedShortAt: 1 bigEndian: true
+]
+
+{ #category : #accessing }
+ESP32I2CConnection >> write8BitsAt: aRegister data: aByte [
+	self writeByteAt: aRegister data: aByte 
 ]
 
 { #category : #reading }
