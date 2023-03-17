@@ -79,6 +79,11 @@ ESP32Driver >> brokerIP: anObject [
 	brokerIP := anObject
 ]
 
+{ #category : #i2c }
+ESP32Driver >> closeI2C: anI2CAddress [
+	self sendCommandRaw: 'I2CClose' params: (ByteArray with: anI2CAddress)
+]
+
 { #category : #utilties }
 ESP32Driver >> dacList [
 	^self sendCommandWait: 'DACList' params: #()
@@ -123,6 +128,12 @@ ESP32Driver >> mqttClient: anObject [
 	mqttClient := anObject
 ]
 
+{ #category : #i2c }
+ESP32Driver >> openI2C: anI2CAddress [
+	self sendCommand: 'I2COpen' params: anI2CAddress.
+	^ESP32I2CConnection new i2cAddress: anI2CAddress ; driver: self; yourself
+]
+
 { #category : #utilties }
 ESP32Driver >> outputList [
 	^self sendCommandWait: 'OutputList' params: #()
@@ -160,6 +171,14 @@ ESP32Driver >> sendCommand: code params: paramList [
 	topic := 'pots/', deviceName, '/', code.
 	payload := (STONJSON toString: paramList) asByteArray .
 	mqttClient sendMessage: payload toTopic: topic
+]
+
+{ #category : #utilties }
+ESP32Driver >> sendCommandRaw: code params: aByteArray [
+	"append command code to topic and send aByteArray as payload"
+	| topic |
+	topic := 'pots/', deviceName, '/', code.
+	mqttClient sendMessage: aByteArray  toTopic: topic
 ]
 
 { #category : #utilties }
