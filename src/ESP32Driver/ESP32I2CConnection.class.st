@@ -1,3 +1,9 @@
+"
+I represent an I2C connection to a specific bus address. 
+Effectively I correspond to a i2d Device in Toit
+
+I am created through the EPS23Driver #I2COpen method. At the same time a device is  created in the I2CDevices map in daemon.toit
+"
 Class {
 	#name : #ESP32I2CConnection,
 	#superclass : #Object,

@@ -26,7 +26,7 @@ Class {
 	#category : #ESP32Driver
 }
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> adcList [
 	^self sendCommandWait: 'ADCList' params: #()
 ]
@@ -37,7 +37,7 @@ ESP32Driver >> analogValue: aValue intoPin: pinNr [
 ]
 
 { #category : #'analog io' }
-ESP32Driver >> analogValuefromPin: pinNr [
+ESP32Driver >> analogValueFromPin: pinNr [
 	"we may want to checl whether the first element of the answer is indeed the pin number"
 	 ^(self sendCommandWait: 'AI' params: { pinNr }) at: 2
 ]
@@ -84,7 +84,7 @@ ESP32Driver >> closeI2C: anI2CAddress [
 	self sendCommandRaw: 'I2CClose' params: (ByteArray with: anI2CAddress)
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> dacList [
 	^self sendCommandWait: 'DACList' params: #()
 ]
@@ -111,7 +111,12 @@ ESP32Driver >> digitalValueFromPin: pinNr [
 	^(self sendCommandWait: 'DI' params: { pinNr }) at: 2
 ]
 
-{ #category : #utilties }
+{ #category : #finalization }
+ESP32Driver >> disconnect [
+	mqttClient close
+]
+
+{ #category : #utilities }
 ESP32Driver >> i2cList [
 	^self sendCommandWait: 'I2CList' params: #()
 ]
@@ -134,12 +139,12 @@ ESP32Driver >> openI2C: anI2CAddress [
 	^ESP32I2CConnection new i2cAddress: anI2CAddress ; driver: self; yourself
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> outputList [
 	^self sendCommandWait: 'OutputList' params: #()
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> pinList [
 	^self sendCommandWait: 'PinList' params: #()
 ]
@@ -164,7 +169,7 @@ ESP32Driver >> pwmValue: percentage intoPin: pinNr [
 	^self sendCommand: 'PWM' params: { pinNr . percentage}
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> sendCommand: code params: paramList [
 	"append command code to topic and send paramlist json encoded as payload"
 	| topic payload |
@@ -173,7 +178,7 @@ ESP32Driver >> sendCommand: code params: paramList [
 	mqttClient sendMessage: payload toTopic: topic
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> sendCommandRaw: code params: aByteArray [
 	"append command code to topic and send aByteArray as payload"
 	| topic |
@@ -181,7 +186,7 @@ ESP32Driver >> sendCommandRaw: code params: aByteArray [
 	mqttClient sendMessage: aByteArray  toTopic: topic
 ]
 
-{ #category : #utilties }
+{ #category : #utilities }
 ESP32Driver >> sendCommandWait: code params: paramList [
 	"append command code to topic and send paramlist json encoded as payload"
 	| topic payload answer |
@@ -201,4 +206,11 @@ ESP32Driver >> setup [
 	mqttClient := MQTTClient url: brokerIP.
 	mqttClient open.
 	mqttClient subscribeToTopic: 'pots/', deviceName, '/+/Result'
+]
+
+{ #category : #utilities }
+ESP32Driver >> version [
+	"return VERSION string from daemon.toit"
+
+	^self sendCommandWait: 'Version' params: #()
 ]
