@@ -67,6 +67,11 @@ ESP32Driver >> bePWMOutputOnPin: pinNr [
 	self sendCommand: 'Mode' params: { pinNr . 'PWM' }
 ]
 
+{ #category : #pwm }
+ESP32Driver >> beServoOutputOnPin: pinNr [
+	self sendCommand: 'Mode' params: { pinNr . 'Servo' }
+]
+
 { #category : #accessing }
 ESP32Driver >> brokerIP [
 
