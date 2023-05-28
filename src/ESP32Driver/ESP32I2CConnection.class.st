@@ -1,8 +1,13 @@
 "
 I represent an I2C connection to a specific bus address. 
-Effectively I correspond to a i2d Device in Toit
+Effectively I correspond 1-to-1 to a i2c Device in Toit
 
-I am created through the EPS23Driver #I2COpen method. At the same time a device is  created in the I2CDevices map in daemon.toit
+I am created through the EPS23Driver #I2COpen method. At the same time a device is created in the I2CDevices map in daemon.toit.
+
+My methods a the same as those of the oter i2cConnections for PiGPIO, Firmata and Picod.
+
+Implementation detail:
+Parameters are in a JSON-encoded list, as for the rest of the ESP32Driver; I2C frequently uses byte arrays and these are base64 encoded.
 "
 Class {
 	#name : #ESP32I2CConnection,

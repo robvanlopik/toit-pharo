@@ -2,7 +2,7 @@
 Class: ESP32Driver
                                                                                                     
 I interact with a daemon, written in the Toit programming language, running on an ESP32.
-I communicate of TCP/IP using the MQTT protocol.
+I communicate over TCP/IP using the MQTT protocol.
 
 To start: 
 ```smalltalk
@@ -11,7 +11,8 @@ driver := ESP32Driver new;
 	brokerIP: 'mqtt://192.168.1.233' ;
 	setup
 	```
-mqttClient:		<Object>
+Apart from the operations on GPIO pins, I have some reporting methods to be used by Pots to populate its Pin dictionary.
+
 
 Implementation Points
 "
@@ -203,6 +204,12 @@ ESP32Driver >> sendCommandWait: code params: paramList [
 	"to do check topic"
 	"note that the answer may include e.g. the pin numbers as first element"
 	^STONJSON fromString: ( answer message asString)
+]
+
+{ #category : #'pwm-servo' }
+ESP32Driver >> servoOnPin: nr pulseWidth: us [
+	"set pulse width on pin nr to us microseconds"
+	self sendCommand: 'Servo'  params: { nr . us }
 ]
 
 { #category : #initialization }
